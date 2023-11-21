@@ -4,6 +4,7 @@ class MonumentsController < ApplicationController
   # GET /monuments
   def index
     @monuments = Monument.all
+    @monument = Monument.new
   end
 
   # GET /monuments/1
@@ -23,10 +24,15 @@ class MonumentsController < ApplicationController
   def create
     @monument = Monument.new(monument_params)
 
-    if @monument.save
-      redirect_to @monument, notice: "Monument was successfully created."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+  
+      if @monument.save
+        format.html {redirect_to @monument, notice: "Monument was successfully created."}
+        format.json # -> It's gonna look for a create.json
+      else
+        format.html {render :new, status: :unprocessable_entity}
+        format.json
+      end
     end
   end
 
